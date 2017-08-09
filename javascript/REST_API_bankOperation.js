@@ -1,10 +1,8 @@
-
-	
-	$(document).ready(function() {
+$(document).ready(function() {
 	    $.ajax({
 	    	type: "GET",
 	    	dataType: "json",
-	    	url: "http://localhost:8080/sgp/api/collaborateurs/"
+	    	url: "http://localhost:8080/sgp/api/collaborateurs/",
 	    }).then(function(data) {
 	    	
 	    	for (var i = 0; i < data.length; i++) {
@@ -49,25 +47,45 @@
 				
 				$(inputValue).click(function(){
 					 var matriculeChoisi = $(this).attr("id");
+					 
 					 $.get("http://localhost:8080/sgp/api/collaborateurs/"+matriculeChoisi+"/banque",function(data, status ){
 						 document.getElementById("inputBanque").value = data.banque;
 						 document.getElementById("inputBic").value = data.bic;
 						 document.getElementById("inputIban").value = data.iban;
+						 document.getElementById("editButton").value = matriculeChoisi;
 					 });
 				})
 				
 				
-			}
-	    	
-	    	
+			};
 	    	
 	    });
+	    
+	    
+	
 	});
- 
-	
-
-	
-	
-	
 
 
+$(document).ready(function() {
+	$("#editButton").click(function() {
+		var banque = $("#inputBanque").val();
+		var bic = $("#inputBic").val();
+		var iban = $("#inputIban").val();
+		var matricule = $("#editButton").val();
+		var collaborateur = {'banque':banque, 'bic':bic, 'iban': iban };
+			$.ajax({
+				url : "http://localhost:8080/sgp/api/collaborateurs/'"+matricule+"'/banque/ ",
+				data : collaborateur,
+				type : "POST",
+				dataType : "JSON",
+				success : function(response) {
+					alert(response.status);
+				},
+				error : function() {
+					alert("error");
+				},
+			});
+
+		});		
+
+});	
